@@ -6,10 +6,13 @@ To capture images, send a post to:
 /CameraMotionCapture/motionCapture.php
 
 Required POST Variables:
+
 cameraUrl  --  the direct image url for the camera you want to capture
 cameraName --  the name you want to display for this camera
 
+
 Optional POST Variables:
+
 captureCount  --  default 5 --  the number of frames to save when motion is triggered/post is sent to motionCapture.php
 captureDelay  --  default 3 --  the number of seconds between saving frames
 
@@ -30,3 +33,7 @@ Web hosting requirements:
 php with file_put_contents enabled
 
 the webserver will need to be able to write to the /images/ directory
+
+
+note:
+The motionCapture.php file disables SSL to capture from cameras that are ssl only/required.  There are instructions on line 40 of motionCapture.php if you want to enforce ssl.
