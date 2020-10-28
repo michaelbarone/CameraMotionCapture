@@ -1,0 +1,126 @@
+html{
+    height: 100%;
+}
+body {
+    overflow: hidden;
+    min-height: 100%;
+	background-color:black;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
+.fullBg {
+    max-height: 90%;
+    max-width: 100%;
+    left: 0;
+    position: absolute;
+    top: 90px;
+    #transform: translate(-50%, -50%);	
+}
+/*
+.fullBg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    max-height: 100%;
+    max-width: 100%;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);	
+}
+*/
+.nav {
+    position: absolute;
+    right: 35px;
+    top: 35px;
+    z-index: 110;
+    float: none;
+    clear: both;
+    margin: 0;
+    padding: 0;
+}
+
+.nav li, a, #Timeline span {
+    cursor: pointer;
+}
+
+.nav a {
+    background-color: rgba(255, 255, 255, 0.50);
+}
+.progress {
+    margin-top: 5px;
+	background-color: rgb(122,122,122);
+}
+
+.progress span {
+	padding: 0 5px;
+}
+
+.progress-bar {
+	color: black !important;
+}
+
+#Cameras {
+	background-color: rgba(88,88,88,0.4);
+    color: #eee;
+    padding: 5px;
+	text-align: left;
+	position: fixed;
+	top: 0;
+	font-size: x-large;
+	min-height: 40px;
+}
+
+#Cameras span {
+	position:absolute;
+	text-align:left;
+	width:100%;
+	left: 0;
+}
+
+#Cameras a {
+	margin: 0 5px;
+}
+
+#MotionEvents {
+    position: relative;
+    left: 0;
+    height: 100%;
+    top: 45px;
+	white-space: nowrap;
+}
+
+#MotionEvents > div {
+	overflow-x: auto;
+}
+
+#MotionEvents a {
+	margin: 0 10px;
+}
+
+#Timeline {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;	
+}
+
+#Timeline span{
+	margin: 0 5px;
+}
+
+.selected {
+	text-decoration: underline;
+	font-weight:bold;
+}
+
+#webpageRefresh {
+	position: fixed;
+	right: 0;
+	bottom: 0;
+	height: 50px;
+	width: 50px;
+}
