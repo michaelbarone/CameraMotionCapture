@@ -29,4 +29,4 @@ Web hosting requirements:
 
 php with file_put_contents enabled
 
-the webserver will need to be able to write to this web directory
+the webserver will need to be able to write to the /images/ directory

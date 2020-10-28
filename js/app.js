@@ -50,7 +50,7 @@ app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, 
 		var lastMotion;
 		$http({
 		  method: 'GET',
-		  url: './lastMotion.json'
+		  url: './images/lastMotion.json'
 		}).then(function successCallback(response) {
 			// RESPONSE CONTAINS YOUR FILE LIST
 			angular.forEach(response.data, function (value, key) {
@@ -62,7 +62,7 @@ app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, 
 			}
 		}, function errorCallback(response) {
 			// ERROR CASE
-			console.log("error on loadLastMotion");
+			console.log("error on loadLastMotion (possible no previous motion capture or JSON file has not been created yet)");
 			console.log("Load Cameras anyway");
 			$scope.functions.loadCameras();
 		});
@@ -140,7 +140,7 @@ app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, 
 				promisesResolve++;
 				if (promisesResolve == promisesToResolve) {
 					// skip if recently active on the interface ~ 3 minutes
-					if($scope.lastInteraction - Date.now() > 200000){
+					if(Date.now() - $scope.lastInteraction > 200000){
 						setMostRecentMotion(mostRecentCamera,mostRecentMotionTime);
 					}
 				}
