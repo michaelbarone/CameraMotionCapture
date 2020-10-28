@@ -50,7 +50,6 @@ $arrContextOptions=array(
 $json = new stdClass();
 $json->lastMotion = $timestamp * 1;
 $json = json_encode($json);
-file_put_contents("./images/lastMotion.json", $json);
 
 // save the images
 for ($i = 0; $i < $captureCount; $i++) {
@@ -60,4 +59,6 @@ for ($i = 0; $i < $captureCount; $i++) {
 	copy($mostRecent, $location);	
 	sleep($captureDelay);
 }
+// save the lastMotion timestamp
+file_put_contents("./images/lastMotion.json", $json);
 ?>
