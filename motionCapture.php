@@ -55,9 +55,13 @@ $json = json_encode($json);
 for ($i = 0; $i < $captureCount; $i++) {
 	$mostRecent = './images/'.$cameraName.'/mostRecent.jpg';
 	$location = './images/'.$cameraName.'/'.$timestamp.'/'.time().'000.jpg';
-	file_put_contents($mostRecent, file_get_contents($cameraUrl, false, stream_context_create($arrContextOptions)));
-	copy($mostRecent, $location);	
-	sleep($captureDelay);
+	if (($image = file_get_contents($cameraUrl, false, stream_context_create($arrContextOptions))) !== false) {
+		file_put_contents($mostRecent, $image);
+		copy($mostRecent, $location);
+		sleep($captureDelay);
+	} else {
+		$i--;
+	}
 }
 // save the lastMotion timestamp
 file_put_contents("./images/lastMotion.json", $json);
