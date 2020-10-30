@@ -20,6 +20,7 @@ if(is_dir($dir)){
             }
         }
     }
+	sort($return_array);
     echo json_encode($return_array);
 }
 ?>
