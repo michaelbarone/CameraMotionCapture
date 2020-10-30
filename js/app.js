@@ -195,6 +195,7 @@ app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, 
 			//get random start point in $scope.slides
 			$scope.currentImageIndex = 0;
 			//console.log($scope.currentImageIndex);
+			$timeout.cancel(timeoutN);
             timeoutN = $timeout(nextSlide, INTERVAL);
         });
     });
