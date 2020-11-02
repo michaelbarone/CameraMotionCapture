@@ -13,6 +13,8 @@ cameraName --  the name you want to display for this camera
 
 Optional POST Variables:
 ```
+username	  --  the username for the camera if set (this can be included in the url instead of here)
+password	  --  the password for the camera if set (this can be included in the url instead of here)
 captureCount  --  default 5 --  the number of frames to save when motion is triggered/post is sent to motionCapture.php
 captureDelay  --  default 3 --  the number of seconds between saving frames
 ```
@@ -30,10 +32,10 @@ By loading the main/root webpage [webserver]/CameraMotionCapture/  it will autom
 
 ## Web hosting requirements:
 
-php with file_put_contents enabled
+php with allow_url_fopen enabled
 
-the webserver will need to be able to write to the /images/ directory
+the webserver user will need to be able to write/execute to the /images/ directory
 
 
 note:
-The motionCapture.php file disables SSL to capture from cameras that are ssl only/required.  There are instructions on line 40 of motionCapture.php if you want to enforce ssl.
+The motionCapture.php file disables SSL to capture from cameras that are ssl only/required.  There are instructions on line 50 of motionCapture.php if you want to enforce ssl.
