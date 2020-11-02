@@ -67,14 +67,22 @@ $json = json_encode($json);
 file_put_contents("./images/lastMotion.json", $json);
 
 // save the images
+$failcount = 0;
 for ($i = 0; $i < $captureCount; $i++) {
 	$mostRecent = './images/'.$cameraName.'/mostRecent.jpg';
 	$location = './images/'.$cameraName.'/'.$timestamp.'/'.time().'000.jpg';
 	if (($image = file_get_contents($cameraUrl, false, stream_context_create($arrContextOptions))) !== false) {
 		file_put_contents($mostRecent, $image);
 		copy($mostRecent, $location);
-		sleep($captureDelay);
+		if($captureCount>1){
+			sleep($captureDelay);
+		}
 	} else {
+		if($failcount > 2) {
+			echo "too many fail attempts to get image from camera.";
+			break;
+		}
+		$failcount++;
 		$i--;
 	}
 }
