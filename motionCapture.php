@@ -22,6 +22,16 @@ if($_POST['captureDelay']){
 } else {
 	$captureDelay = 3;
 }
+if($_POST['username']){
+	$username = $_POST['username'];
+} else {
+	$username = "";
+}
+if($_POST['password']){
+	$password = $_POST['password'];
+} else {
+	$password = "";
+}
 
 
 // get current timestamp to separate motion events
@@ -45,6 +55,9 @@ $arrContextOptions=array(
         "verify_peer"=>false,
         "verify_peer_name"=>false,
     ),
+	'http' => array(
+		'header' => "Authorization: Basic " . base64_encode("$username:$password")
+	)
 );
 
 $json = new stdClass();
