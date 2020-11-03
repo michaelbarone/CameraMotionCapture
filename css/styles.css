@@ -11,6 +11,10 @@ body {
   display: none !important;
 }
 
+span {
+	color: #ccc;
+}
+
 .fullBg {
     max-height: 90%;
     max-width: 100%;
@@ -74,11 +78,13 @@ body {
 	min-height: 40px;
 }
 
-#Cameras span {
+#Cameras div {
 	position:absolute;
 	text-align:left;
-	width:100%;
+	right: 80px;
 	left: 0;
+    overflow-x: auto;
+    white-space: nowrap;	
 }
 
 #Cameras a {
@@ -97,6 +103,12 @@ body {
 	overflow-x: auto;
 }
 
+#MotionEvents span.dateGroup {
+	border-color: #ccc;
+    border-left: inset;
+	padding-left: 3px;
+}
+
 #MotionEvents a {
 	margin: 0 10px;
 }
@@ -110,6 +122,13 @@ body {
 
 #Timeline span{
 	margin: 0 5px;
+	padding: 3px 4px;
+	border-radius: 50%;
+}
+
+#Timeline span.selected {
+	background-color: rgba(22,22,22,.65);
+	font-weight: 900;
 }
 
 .selected {
@@ -123,4 +142,44 @@ body {
 	bottom: 0;
 	height: 50px;
 	width: 50px;
+}
+
+.removeEvents, .removeEvents:hover {
+	color: red;
+	cursor: pointer;
+}
+
+.btn-outline-danger,.btn-outline-danger:hover {
+    color: #dc3545;
+    background-color: transparent;
+    background-image: none;
+    border-color: #dc3545;
+}
+
+.btn-outline-danger.removeEvents {
+    color: #eee;
+    background-color: #dc3545;
+    background-image: none;
+    border-color: #dc3545;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
 }

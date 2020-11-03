@@ -10,6 +10,9 @@
 
 <body ng-controller="MainCtrl">
 	<div ng-cloak id="Cameras" class="col-xs-12">
+		<a style="float:right;" ng-init="toggleDelete=false;" ng-class="{'removeEvents':toggleDelete}" class="btn btn-outline-danger" ng-click="toggleDelete=!toggleDelete">
+			Delete
+		</a>
 		<div class="{{currentAnimation}}">
 			<a ng-repeat="camera in cameras" ng-class="{'selected':camera.cameraName==selectedCamera}" ng-click="functions.loadMotions(camera.cameraName)">
 				{{camera.cameraName}}
@@ -20,9 +23,17 @@
 	<div ng-cloak id="MotionEvents" ng-show="selectedCameraIndex>-1" class="col-xs-12">
 		<div class="{{currentAnimation}}">
 			<span>
-			<a ng-repeat="motion in cameras[selectedCameraIndex].motions" ng-class="{'selected':motion.motionTime==selectedMotionTime}" ng-click="functions.getImages(selectedCamera,motion.motionTime)">
-				{{motion.motionTime | date: 'yyyy-MM-dd hh:mm:ss a' }}
-			</a>
+				<span ng-repeat="motion1 in cameras[selectedCameraIndex].motions | unique: 'date'" class="dateGroup">
+					<text ng-class="{'removeEvents':toggleDelete}"
+						ng-click="toggleDelete ? functions.removeEvent(selectedCamera,motion1.date,'day') : null">
+						{{motion1.date}}
+					</text>
+					<a ng-repeat="motion in cameras[selectedCameraIndex].motions | filter: {date: motion1.date}" 
+						ng-class="{'selected':motion.motionTime==selectedMotionTime, 'removeEvents':toggleDelete}" 
+						ng-click="toggleDelete ? functions.removeEvent(selectedCamera,motion.motionTime,'event') : functions.getImages(selectedCamera,motion.motionTime)">
+						{{motion.motionTime | date: 'h:mm:ss a' }}
+					</a>
+				</span>
 			</span>
 		</div>
 	</div>	

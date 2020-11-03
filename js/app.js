@@ -1,6 +1,6 @@
 var app = angular.module('website', ['ngAnimate', 'ui.bootstrap','ngTouch']);
 
-app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, $http, $q) {
+app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, $http, $q, $filter) {
     //var INTERVAL = 10000;
     var INTERVAL = 4000;
 	// at 10000 INTERVAL, 360 is 1 check per hour
@@ -98,7 +98,9 @@ app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, 
 		}).then(function successCallback(response) {
 			// RESPONSE CONTAINS YOUR FILE LIST
 			angular.forEach(response.data, function (value, key) {
-				motions = motions.concat({id:key, motionTime:value});
+				var date = new Date(Number(value));
+				var thisdate = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
+				motions = motions.concat({id:key, motionTime:value, date:thisdate});
 			});
 			$scope.cameras[$scope.selectedCameraIndex].motions = motions;
 			var lastMotion = motions[motions.length-1].motionTime;
@@ -125,7 +127,9 @@ app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, 
 			}).then(function successCallback(response) {
 				// RESPONSE CONTAINS YOUR FILE LIST
 				angular.forEach(response.data, function (value, key) {
-					motions = motions.concat({id:key, motionTime:value});
+					var date = new Date(Number(value));
+					var thisdate = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
+					motions = motions.concat({id:key, motionTime:value, date:thisdate});
 				});
 				var lastMotion = motions[motions.length-1].motionTime;
 
@@ -149,6 +153,44 @@ app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, 
 				console.log("error on loadMotions");
 			});
 		});
+	}
+
+	$scope.functions.removeEvent = function(camera,event,type) {
+		var selectedCameraIndex = $scope.cameras.findIndex(x=>x.cameraName === camera);
+		var eventString = "";
+		switch(type){
+			case "day":
+				var theEvents = [];
+				theEvents = $filter('filter')($scope.cameras[selectedCameraIndex].motions, {'date':event});
+				eventString = theEvents.map(function (obj) {
+					return obj['motionTime'];
+				  }).join(',');
+				break;
+				
+			case "event":
+				eventString = event;
+				break;
+			
+			default:
+				return;
+		}
+		if(eventString!=""){
+			$http({
+				method: 'GET',
+				url: './data/deleteEvents.php?cameraName='+camera+'&events='+eventString
+			}).then(function successCallback(response) {
+				if(response.statusText==="OK"){
+					//console.log("success removing motions");
+					angular.forEach(eventString.split(','), function(event) {
+						var index = $scope.cameras[selectedCameraIndex].motions.findIndex(x=>x.motionTime === event);
+						$scope.cameras[selectedCameraIndex].motions.splice(index, 1);
+					});
+				}
+			}, function errorCallback(response) {
+				// ERROR CASE
+				console.log("error on removeEvent");
+			});
+		}
 	}
 
 	function setMostRecentMotion(mostRecentCamera,mostRecentMotionTime){
@@ -357,4 +399,43 @@ app.directive('bgImage', function ($window, $timeout) {
         });
 	*/
     }
+});
+
+app.filter('unique', function () {
+
+  return function (items, filterOn) {
+
+    if (filterOn === false) {
+      return items;
+    }
+
+    if ((filterOn || angular.isUndefined(filterOn)) && angular.isArray(items)) {
+      var hashCheck = {}, newItems = [];
+
+      var extractValueToCompare = function (item) {
+        if (angular.isObject(item) && angular.isString(filterOn)) {
+          return item[filterOn];
+        } else {
+          return item;
+        }
+      };
+
+      angular.forEach(items, function (item) {
+        var valueToCheck, isDuplicate = false;
+
+        for (var i = 0; i < newItems.length; i++) {
+          if (angular.equals(extractValueToCompare(newItems[i]), extractValueToCompare(item))) {
+            isDuplicate = true;
+            break;
+          }
+        }
+        if (!isDuplicate) {
+          newItems.push(item);
+        }
+
+      });
+      items = newItems;
+    }
+    return items;
+  };
 });
