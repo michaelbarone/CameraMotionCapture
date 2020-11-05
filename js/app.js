@@ -44,6 +44,7 @@ app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, 
 
 	$scope.functions.loadLastMotion = function() {
 		$timeout.cancel(timeoutLastMotionCheck);
+		timeoutLastMotionCheck = $timeout($scope.functions.loadLastMotion, 300000);
 		var lastMotion;
 		$http({
 		  method: 'GET',
@@ -63,7 +64,6 @@ app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, 
 			console.log("Load Cameras anyway");
 			$scope.functions.loadCameras();
 		});
-		timeoutLastMotionCheck = $timeout($scope.functions.loadLastMotion, 300000);
 	}
 	$scope.functions.loadLastMotion();
 
