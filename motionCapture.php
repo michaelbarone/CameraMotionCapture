@@ -12,22 +12,22 @@ if(!$_POST || !isset($_POST)) {
 // set variables to post input
 $cameraUrl = $_POST['cameraUrl'];
 $cameraName = $_POST['cameraName'];
-if($_POST['captureCount']){
+if(isset($_POST['captureCount'])){
 	$captureCount = $_POST['captureCount'];
 } else {
 	$captureCount = 5;
 }
-if($_POST['captureDelay']){
+if(isset($_POST['captureDelay'])){
 	$captureDelay = $_POST['captureDelay'];
 } else {
 	$captureDelay = 3;
 }
-if($_POST['username']){
+if(isset($_POST['username'])){
 	$username = $_POST['username'];
 } else {
 	$username = "";
 }
-if($_POST['password']){
+if(isset($_POST['password'])){
 	$password = $_POST['password'];
 } else {
 	$password = "";

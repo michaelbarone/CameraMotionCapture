@@ -1,9 +1,7 @@
 var app = angular.module('website', ['ngAnimate', 'ui.bootstrap','ngTouch']);
 
 app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, $http, $q, $filter) {
-    //var INTERVAL = 10000;
-    var INTERVAL = 4000;
-	// at 10000 INTERVAL, 360 is 1 check per hour
+    var INTERVAL = 3000;
 	var timeout;
 	var timeoutP;
 	var timeoutN;
@@ -11,7 +9,6 @@ app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, 
 	var timeoutLastMotionCheck;
 	
 	$scope.functions = []
-
 
     function setCurrentSlideIndex(index) {
 		$timeout.cancel(timeoutN);
@@ -102,11 +99,15 @@ app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, 
 				var thisdate = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
 				motions = motions.concat({id:key, motionTime:value, date:thisdate});
 			});
-			$scope.cameras[$scope.selectedCameraIndex].motions = motions;
-			var lastMotion = motions[motions.length-1].motionTime;
-			$scope.cameras[$scope.selectedCameraIndex].lastMotion = lastMotion;			
-			$scope.functions.getImages(cameraName,lastMotion);
-			$timeout(scrollMotionEvents,500);
+			if(motions.length>0){
+				$scope.cameras[$scope.selectedCameraIndex].motions = motions;
+				var lastMotion = motions[motions.length-1].motionTime;
+				$scope.cameras[$scope.selectedCameraIndex].lastMotion = lastMotion;			
+				$scope.functions.getImages(cameraName,lastMotion);
+				$timeout(scrollMotionEvents,500);
+			} else {
+				$scope.slides = [];
+			}
 		}, function errorCallback(response) {
 			// ERROR CASE
 			console.log("error on loadMotions");
@@ -131,16 +132,19 @@ app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, 
 					var thisdate = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
 					motions = motions.concat({id:key, motionTime:value, date:thisdate});
 				});
-				var lastMotion = motions[motions.length-1].motionTime;
+				if(motions.length>0){
+					var lastMotion = motions[motions.length-1].motionTime;
 
-				if(lastMotion>mostRecentMotionTime){
-					mostRecentMotionTime = lastMotion;
-					mostRecentCamera = value.cameraName;
+					if(lastMotion>mostRecentMotionTime){
+						mostRecentMotionTime = lastMotion;
+						mostRecentCamera = value.cameraName;
+					}
+
+					$scope.cameras[key].motions = motions;
+					$scope.cameras[key].lastMotion = lastMotion;
+				} else {
+					$scope.slides = [];
 				}
-
-				$scope.cameras[key].motions = motions;
-				$scope.cameras[key].lastMotion = lastMotion;
-				
 				promisesResolve++;
 				if (promisesResolve == promisesToResolve) {
 					// skip if recently active on the interface ~ 3 minutes
