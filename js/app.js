@@ -188,6 +188,9 @@ app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, 
 					angular.forEach(eventString.split(','), function(event) {
 						var index = $scope.cameras[selectedCameraIndex].motions.findIndex(x=>x.motionTime === event);
 						$scope.cameras[selectedCameraIndex].motions.splice(index, 1);
+						if($scope.selectedMotionTime === event){
+							$scope.slides = [];
+						}
 					});
 				}
 			}, function errorCallback(response) {
