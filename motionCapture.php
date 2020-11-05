@@ -8,26 +8,31 @@ if(!$_POST || !isset($_POST)) {
 	exit;
 }
 
+if($_POST['cameraUrl'] == null || $_POST['cameraUrl'] == "" || $_POST['cameraName'] == null || $_POST['cameraName'] == ""){
+	echo "cameralUrl or cameraName is not defined properly"."<br>";
+	echo "...exiting";
+	exit;
+}
 
 // set variables to post input
 $cameraUrl = $_POST['cameraUrl'];
 $cameraName = $_POST['cameraName'];
-if(isset($_POST['captureCount'])){
+if(isset($_POST['captureCount']) && $_POST['captureCount'] != null && $_POST['captureCount'] != "" && is_numeric($_POST['captureCount'])){
 	$captureCount = $_POST['captureCount'];
 } else {
 	$captureCount = 5;
 }
-if(isset($_POST['captureDelay'])){
+if(isset($_POST['captureDelay']) && $_POST['captureDelay'] != null && $_POST['captureDelay'] != "" && is_numeric($_POST['captureDelay'])){
 	$captureDelay = $_POST['captureDelay'];
 } else {
 	$captureDelay = 3;
 }
-if(isset($_POST['username'])){
+if(isset($_POST['username']) && $_POST['username'] != null && $_POST['username'] != ""){
 	$username = $_POST['username'];
 } else {
 	$username = "";
 }
-if(isset($_POST['password'])){
+if(isset($_POST['password']) && $_POST['password'] != null && $_POST['password'] != ""){
 	$password = $_POST['password'];
 } else {
 	$password = "";
