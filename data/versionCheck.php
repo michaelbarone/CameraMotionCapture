@@ -8,7 +8,7 @@ if (($gitJson = file_get_contents("https://raw.githubusercontent.com/michaelbaro
 }
 
 // get version from local web server
-if (($localJson = file_get_contents("./version.json")) !== false) {
+if (($localJson = file_get_contents("../version.json")) !== false) {
 	$localVersion = json_decode($localJson, true);
 } else {
 	echo "No local version file.  Update webserver code from github.";

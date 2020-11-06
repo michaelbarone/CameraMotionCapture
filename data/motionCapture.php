@@ -44,11 +44,11 @@ $timestamp = time()."000";
 
 
 // create directories if they do not exist
-if (!file_exists('./images/'.$cameraName)) {
-    mkdir('./images/'.$cameraName, 0777, true);
+if (!file_exists('../images/'.$cameraName)) {
+    mkdir('../images/'.$cameraName, 0777, true);
 }
-if (!file_exists('./images/'.$cameraName.'/'.$timestamp)) {
-    mkdir('./images/'.$cameraName.'/'.$timestamp, 0777, true);
+if (!file_exists('../images/'.$cameraName.'/'.$timestamp)) {
+    mkdir('../images/'.$cameraName.'/'.$timestamp, 0777, true);
 }
 
 
@@ -69,13 +69,13 @@ $json = new stdClass();
 $json->lastMotion = $timestamp * 1;
 $json = json_encode($json);
 // save the lastMotion timestamp
-file_put_contents("./images/lastMotion.json", $json);
+file_put_contents("../images/lastMotion.json", $json);
 
 // save the images
 $failcount = 0;
 for ($i = 0; $i < $captureCount; $i++) {
-	$mostRecent = './images/'.$cameraName.'/mostRecent.jpg';
-	$location = './images/'.$cameraName.'/'.$timestamp.'/'.time().'000.jpg';
+	$mostRecent = '../images/'.$cameraName.'/mostRecent.jpg';
+	$location = '../images/'.$cameraName.'/'.$timestamp.'/'.time().'000.jpg';
 	if (($image = file_get_contents($cameraUrl, false, stream_context_create($arrContextOptions))) !== false) {
 		file_put_contents($mostRecent, $image);
 		copy($mostRecent, $location);

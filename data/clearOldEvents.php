@@ -26,7 +26,7 @@ $purgeBefore = $timestamp - ($daysToKeep * (1000*60*60*24));
 
 //echo $purgeBefore . PHP_EOL;
 
-$dir = '.' . DIRECTORY_SEPARATOR . 'images';
+$dir = '..' . DIRECTORY_SEPARATOR . 'images';
 if($cameraName != ""){
 	checkCameraEvents($cameraName,$purgeBefore);
 } else {
@@ -44,7 +44,7 @@ if($cameraName != ""){
 
 function checkCameraEvents($camera,$purgeBefore){
 	//echo $camera . PHP_EOL;
-	$dir = '.' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . $camera;
+	$dir = '..' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . $camera;
 	$eventCount = 0;
 	if (is_dir($dir)) {
 		$objects = scandir($dir);
