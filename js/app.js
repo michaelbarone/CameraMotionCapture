@@ -11,6 +11,7 @@ app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, 
 	$scope.functions = []
 
     function setCurrentSlideIndex(index) {
+		$scope.lastInteraction = Date.now();
 		$timeout.cancel(timeoutN);
 		if(index <= $scope.slides.length - 1 || index >= 0){
 			$scope.currentImageIndex = index;
@@ -44,7 +45,7 @@ app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, 
 
 	$scope.functions.loadLastMotion = function() {
 		$timeout.cancel(timeoutLastMotionCheck);
-		timeoutLastMotionCheck = $timeout($scope.functions.loadLastMotion, 300000);
+		timeoutLastMotionCheck = $timeout($scope.functions.loadLastMotion, 90000);
 		var lastMotion;
 		$http({
 		  method: 'GET',
@@ -147,8 +148,8 @@ app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, 
 				}
 				promisesResolve++;
 				if (promisesResolve == promisesToResolve) {
-					// skip if recently active on the interface ~ 3 minutes
-					if(Date.now() - $scope.lastInteraction > 200000){
+					// skip if recently active on the interface ~ 30 seconds
+					if(Date.now() - $scope.lastInteraction > 30000 && toggleDelete == false){
 						setMostRecentMotion(mostRecentCamera,mostRecentMotionTime);
 					}
 				}
