@@ -149,7 +149,7 @@ app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, 
 				promisesResolve++;
 				if (promisesResolve == promisesToResolve) {
 					// skip if recently active on the interface ~ 30 seconds
-					if(Date.now() - $scope.lastInteraction > 30000 && toggleDelete == false){
+					if(Date.now() - $scope.lastInteraction > 30000 && $scope.toggleDelete == false){
 						setMostRecentMotion(mostRecentCamera,mostRecentMotionTime);
 					}
 				}
