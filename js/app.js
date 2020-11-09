@@ -1,14 +1,58 @@
-var app = angular.module('website', ['ngAnimate', 'ui.bootstrap','ngTouch']);
+var app = angular.module('website', ['ngAnimate','ngRoute','ui.bootstrap','ngTouch']);
 
-app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, $http, $q, $filter) {
+
+app.config(['$routeProvider','$locationProvider', function($routeProvider,$locationProvider) {
+//app.config(function() {
+
+/*
+	$routeProvider.when('/home', {
+		templateUrl: 'components/home.html'
+		, option: 'default'
+	});	
+
+	$routeProvider.when('/frame', {
+		templateUrl: 'components/frame.html'
+		, option: 'default'
+	});
+
+
+	$routeProvider.when('/', {
+		templateUrl: 'templates/main.html'
+		, controller: 'MainCtrl'
+		, option: 'default'
+	});	
+	$routeProvider.otherwise({redirectTo: '/'});
+
+	//$locationProvider.html5Mode({enabled: false,requireBase: false});
+*/
+	$locationProvider.html5Mode({enabled: true,requireBase: false});
+	
+	/* custom defaults */
+	window.oncontextmenu = function(event) {
+		event.preventDefault();
+		event.stopPropagation();
+		return false;
+	};
+	window.addEventListener("dragover",function(e){
+		e = e || event;
+		e.preventDefault();
+	},false);
+	window.addEventListener("drop",function(e){
+		e = e || event;
+		e.preventDefault();
+	},false);
+}]);
+//});
+
+
+app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, $http, $q, $filter, $location) {
     var INTERVAL = 3000;
 	var timeout;
 	var timeoutP;
 	var timeoutN;
 	var timeoutMostRecent;
 	var timeoutLastMotionCheck;
-	
-	$scope.functions = []
+	$scope.functions = [];
 
     function setCurrentSlideIndex(index) {
 		$scope.lastInteraction = Date.now();
@@ -43,6 +87,11 @@ app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, 
 		return $scope.currentAnimation === animation;
     }
 
+	$scope.functions.toggleDelete = function() {
+		$scope.toggleDelete = !$scope.toggleDelete;
+	}
+	
+
 	$scope.functions.loadLastMotion = function() {
 		$timeout.cancel(timeoutLastMotionCheck);
 		timeoutLastMotionCheck = $timeout($scope.functions.loadLastMotion, 90000);
@@ -66,7 +115,6 @@ app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, 
 			$scope.functions.loadCameras();
 		});
 	}
-	$scope.functions.loadLastMotion();
 
     $scope.functions.loadCameras = function() {
 		var cameras = [];		
@@ -90,6 +138,12 @@ app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, 
 		var motions = [];
 		$scope.selectedCamera = cameraName;
 		$scope.selectedCameraIndex = $scope.cameras.findIndex(x=>x.cameraName === cameraName);
+		if($scope.selectedCameraIndex == -1){
+			var cameras = [];
+			cameras = cameras.concat({id:0, cameraName:cameraName, motions:[]});
+			$scope.cameras = cameras;
+			$scope.selectedCameraIndex = 0;
+		}
 		$http({
 		  method: 'GET',
 		  url: './data/getMotions.php?cameraName='+cameraName
@@ -103,9 +157,14 @@ app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, 
 			if(motions.length>0){
 				$scope.cameras[$scope.selectedCameraIndex].motions = motions;
 				var lastMotion = motions[motions.length-1].motionTime;
-				$scope.cameras[$scope.selectedCameraIndex].lastMotion = lastMotion;			
-				$scope.functions.getImages(cameraName,lastMotion);
-				$timeout(scrollMotionEvents,500);
+				$scope.cameras[$scope.selectedCameraIndex].lastMotion = lastMotion;
+				if($scope.mode=="Full"){
+					$scope.functions.getImages(cameraName,lastMotion);
+					$timeout(scrollMotionEvents,500);
+				} else {
+					var reverseMotions = motions.reverse();				
+					$scope.functions.getImages(cameraName,reverseMotions[$scope.params.event].motionTime);
+				}
 			} else {
 				$scope.slides = [];
 			}
@@ -260,6 +319,7 @@ app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, 
 	$scope.selectedCameraIndex = -1;
 	$scope.selectedMotionTime = "";
 	$scope.lastInteraction = 0;
+	$scope.mode = "Full";
 
     //$scope.currentAnimation = 'slide-left-animation';
     //$scope.currentAnimation = 'slide-down-animation';
@@ -269,6 +329,22 @@ app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, 
     $scope.isCurrentSlideIndex = isCurrentSlideIndex;
     $scope.setCurrentAnimation = setCurrentAnimation;
     $scope.isCurrentAnimation = isCurrentAnimation;
+	
+	
+	$scope.params = [];
+	$scope.toggleDelete = false;
+
+	angular.forEach($location.search(), function(value,key){
+		$scope.params[key]=value;
+	});	
+	
+	
+	if($scope.params.cameraName && $scope.params.event > -1){
+		$scope.mode = "Event";
+		$scope.functions.loadMotions($scope.params.cameraName);
+	} else {
+		$scope.functions.loadLastMotion();
+	}
 });
 
 app.factory('QueueService', function($rootScope){

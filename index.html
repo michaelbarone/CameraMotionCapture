@@ -1,16 +1,26 @@
 <!DOCTYPE html>
 <html ng-app="website">
 <head>
-    <meta charset="utf-8">
-    <title>Motion</title>
+	<meta charset="utf-8">
+	<title>Camera Motion Capture</title>
+	<meta name='viewport' content='width=device-width,height:window-height, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=auto' />
+	<meta name="mobile-web-app-capable" content="yes">
+	<link rel="icon" sizes="192x192" href="icon-hirez.png">
+	<link rel="icon" sizes="128x128" href="icon-lowrez.png">
+	<meta name='apple-mobile-web-app-capable' content='yes' />		
+	<meta name="apple-mobile-web-app-title" content="Camera Motion Capture">
+	
+	<link rel="icon" type="image/png" href="favicon.ico">
+	<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
     <link href="css/bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body ng-controller="MainCtrl">
-	<div ng-cloak id="Cameras" class="col-xs-12">
-		<a style="float:right;" ng-init="toggleDelete=false;" ng-class="{'removeEvents':toggleDelete}" class="btn btn-outline-danger" ng-click="toggleDelete=!toggleDelete">
+	<div ng-if="mode=='Full'" ng-cloak id="Cameras" class="col-xs-12">
+		<a style="float:right;" ng-if="params.admin" ng-class="{'removeEvents':toggleDelete}" class="btn btn-outline-danger" ng-click="functions.toggleDelete()">
 			Delete
 		</a>
 		<div class="{{currentAnimation}}">
@@ -20,7 +30,7 @@
 		</div>
 	</div>
 	
-	<div ng-cloak id="MotionEvents" ng-show="selectedCameraIndex>-1" class="col-xs-12">
+	<div ng-if="mode=='Full'" ng-cloak id="MotionEvents" ng-show="selectedCameraIndex>-1" class="col-xs-12">
 		<div class="{{currentAnimation}}">
 			<span>
 				<span ng-repeat="motion1 in cameras[selectedCameraIndex].motions | unique: 'date'" class="dateGroup">
@@ -44,6 +54,13 @@
         ng-hide="!isCurrentSlideIndex($index)"
         ng-src="{{slide.src}}" 
 	/>
+	<div ng-if="mode=='Event'">
+		<style>
+			.fullBg{
+				top: 0;
+			}
+		</style>
+	</div>
 	
 	<div ng-cloak id="Timeline" ng-show="loaded">
 		<span ng-repeat="slide in slides" ng-click="setCurrentSlideIndex($index)" ng-class="{'selected':isCurrentSlideIndex($index)}" >
@@ -51,13 +68,12 @@
 		</span>
 	</div>
 
-	<div id="webpageRefresh" onClick="location.href=location.href"></div>
-	
     <script src="libs/jquery.min.js"></script>
     <script src="libs/TweenMax.min.js"></script>
     <script src="libs/angular.min.js"></script>
     <script src="libs/angular-animate.min.js"></script>
     <script src="libs/angular-touch.min.js"></script>
+	<script src="libs/angular-route.min.js"></script>
     <script src="libs/ui-bootstrap-tpls-0.11.0.min.js"></script>
     <script src="libs/preloadjs.min.js"></script>
     <script src="js/app.js"></script>
