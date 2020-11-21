@@ -25,7 +25,7 @@ if(isset($_POST['captureCount']) && $_POST['captureCount'] != null && $_POST['ca
 if(isset($_POST['captureDelay']) && $_POST['captureDelay'] != null && $_POST['captureDelay'] != "" && is_numeric($_POST['captureDelay'])){
 	$captureDelay = $_POST['captureDelay'];
 } else {
-	$captureDelay = 3;
+	$captureDelay = 2;
 }
 if(isset($_POST['username']) && $_POST['username'] != null && $_POST['username'] != ""){
 	$username = $_POST['username'];

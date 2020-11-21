@@ -48,7 +48,7 @@
 		</div>
 	</div>
 	
-    <img ng-cloak ng-show="loaded" bg-image class="fullBg {{currentAnimation}}" ng-repeat="slide in slides"
+    <img ng-cloak ng-show="loaded" bg-image class="fullBg {{currentAnimation}}" ng-repeat="slide in slides track by slide.id"
 		ng-swipe-left="previousSlide"
 		ng-swipe-right="nextSlide"
         ng-hide="!isCurrentSlideIndex($index)"

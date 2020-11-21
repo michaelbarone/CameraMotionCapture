@@ -50,6 +50,7 @@ app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, 
 	var timeout;
 	var timeoutP;
 	var timeoutN;
+	var timeoutG;
 	var timeoutMostRecent;
 	var timeoutLastMotionCheck;
 	$scope.functions = [];
@@ -162,8 +163,13 @@ app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, 
 					$scope.functions.getImages(cameraName,lastMotion);
 					$timeout(scrollMotionEvents,500);
 				} else {
-					var reverseMotions = motions.reverse();				
-					$scope.functions.getImages(cameraName,reverseMotions[$scope.params.event].motionTime);
+					if($scope.params.event == 0){
+						$scope.functions.getImages(cameraName,lastMotion);
+						//$interval($scope.functions.getImages, 1500, 10, true, cameraName, lastMotion);
+					} else {
+						var reverseMotions = motions.reverse();
+						$scope.functions.getImages(cameraName,reverseMotions[$scope.params.event].motionTime);
+					}
 				}
 			} else {
 				$scope.slides = [];
@@ -272,7 +278,11 @@ app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, 
 		$('#MotionEvents > div').scrollLeft(left);		
 	}
 
-    $scope.functions.getImages = function(cameraName,motionTime) {
+    $scope.functions.getImages = function(cameraName,motionTime,retries = -1) {
+		if(retries == 0){
+			return false;
+		}
+		$scope.lastInteractionPrevious = $scope.lastInteraction;
 		$scope.lastInteraction = Date.now();
 		$scope.selectedMotionTime = motionTime;
 		var fileValue = "";
@@ -289,8 +299,21 @@ app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, 
 				fileValue = fileValueExplode.join();
 				images = images.concat({id:fileValue, src:"./images/"+cameraName+"/"+motionTime+"/"+value});
 			});
-			//console.log(images);
-			QueueService.loadManifest(images);
+			if($scope.mode == "Event" && $scope.params.event == 0){
+				if(retries == -1){
+					retries = 2;
+				}
+				if($scope.slides.length != images.length){
+					retries++;retries++;
+					QueueService.loadManifest(images);
+					$timeout($scope.functions.getImages,1250,true,cameraName,motionTime,retries);
+				} else {
+					retries--;
+					$timeout($scope.functions.getImages,1250,true,cameraName,motionTime,retries);
+				}
+			} else {
+				QueueService.loadManifest(images);
+			}
 		}, function errorCallback(response) {
 			// ERROR CASE
 			console.log("error on getImages");
@@ -301,11 +324,17 @@ app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, 
         $scope.$apply(function(){
             $scope.slides = slides;
             $scope.loaded = true;
-			//get random start point in $scope.slides
-			$scope.currentImageIndex = 0;
-			//console.log($scope.currentImageIndex);
-			$timeout.cancel(timeoutN);
-            timeoutN = $timeout(nextSlide, INTERVAL);
+			if($scope.mode == "Event" && $scope.params.event == 0){
+				if($scope.lastInteraction - $scope.lastInteractionPrevious > 3000){
+					$scope.currentImageIndex = 0;
+					$timeout.cancel(timeoutN);
+					timeoutN = $timeout(nextSlide, INTERVAL);
+				}
+			} else {
+				$scope.currentImageIndex = 0;
+				$timeout.cancel(timeoutN);
+				timeoutN = $timeout(nextSlide, INTERVAL);
+			}
         });
     });
 
@@ -319,6 +348,7 @@ app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, 
 	$scope.selectedCameraIndex = -1;
 	$scope.selectedMotionTime = "";
 	$scope.lastInteraction = 0;
+	$scope.lastInteractionPrevious = 0;
 	$scope.mode = "Full";
 
     //$scope.currentAnimation = 'slide-left-animation';
