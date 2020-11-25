@@ -274,7 +274,7 @@ app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, 
 	}
 
 	function scrollMotionEvents(){
-		var left = $('#MotionEvents > div').width();
+		var left = $('#MotionEvents span').width();
 		$('#MotionEvents > div').scrollLeft(left);		
 	}
 
