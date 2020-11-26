@@ -1,16 +1,39 @@
 <?php
+set_time_limit(60);
+$exitScript = false;
+
+ob_start();
 if(!$_POST || !isset($_POST)) {
 	echo "no post variables"."<br>";
 	echo "required variables:"."<br>";
 	echo "cameralUrl"."<br>";
 	echo "cameraName"."<br>";
 	echo "...exiting";
-	exit;
+	$exitScript = true;
 }
 
-if($_POST['cameraUrl'] == null || $_POST['cameraUrl'] == "" || $_POST['cameraName'] == null || $_POST['cameraName'] == ""){
+if(!isset($_POST['cameraUrl']) || $_POST['cameraUrl'] == null || $_POST['cameraUrl'] == "" || !isset($_POST['cameraName']) || $_POST['cameraName'] == null || $_POST['cameraName'] == ""){
 	echo "cameralUrl or cameraName is not defined properly"."<br>";
 	echo "...exiting";
+	$exitScript = true;
+}
+
+if($exitScript===false){
+	echo "Success...."."<br>";
+	echo "Capturing Motion on: ".$_POST['cameraName'];
+}
+$size = ob_get_length();
+header("Content-Encoding: none");
+header("Content-Length: {$size}");
+header("Connection: close");
+ob_end_flush();
+ob_flush();
+flush();
+
+// let the script continue running after it gives the request a response
+
+
+if($exitScript===true){
 	exit;
 }
 
