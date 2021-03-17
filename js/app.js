@@ -361,17 +361,30 @@ app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, 
     $scope.isCurrentAnimation = isCurrentAnimation;
 	
 	
-	$scope.params = [];
+	$scope.params = {};
 	$scope.toggleDelete = false;
 
 	angular.forEach($location.search(), function(value,key){
 		$scope.params[key]=value;
-	});	
+	});
 	
 	
 	if($scope.params.cameraName && $scope.params.event > -1){
 		$scope.mode = "Event";
 		$scope.functions.loadMotions($scope.params.cameraName);
+	} else if($scope.params.cameraUrl && $scope.params.live) {
+		var cameraParams = "";
+		angular.forEach($scope.params, function(value,key){
+			if(!["cameraUrl","live"].includes(key)) {
+				if(cameraParams == ""){
+					cameraParams = key + "=" + value;
+				} else {
+					cameraParams = cameraParams + "&" + key + "=" + value;
+				}
+			}
+		});
+		$scope.iFrameSRC = $scope.params.cameraUrl + "?" + cameraParams
+		$scope.mode = "Live";
 	} else {
 		$scope.functions.loadLastMotion();
 	}
@@ -450,7 +463,7 @@ app.directive('bgImage', function ($window, $timeout) {
 			}
 
             var winwidth = $window.innerWidth;
-            var winheight = $window.innerHeight * .8;
+            var winheight = $window.innerHeight;
 		
             var widthratio = winwidth / bgwidth;
             var heightratio = winheight / bgheight;
@@ -500,7 +513,7 @@ app.directive('bgImage', function ($window, $timeout) {
 		*/
 
 	
-	/*
+
         var windowElement = angular.element($window);
         windowElement.resize(resizeBG);
 
@@ -511,7 +524,7 @@ app.directive('bgImage', function ($window, $timeout) {
         element.bind('load', function () {
             resizeBG();
         });
-	*/
+
     }
 });
 
@@ -553,3 +566,9 @@ app.filter('unique', function () {
     return items;
   };
 });
+
+app.filter('trustThisUrl', ["$sce", function ($sce) {
+        return function (val) {
+            return $sce.trustAsResourceUrl(val);
+        };
+}]);

@@ -47,8 +47,16 @@
 			</span>
 		</div>
 	</div>
+
+	<div ng-if="mode=='Live'" ng-cloak>
+		<!--
+		<iframe id="iFrame" ng-cloak style="height:100%;width:100%;max-width=100%;top:0;left:0;position:absolute;" ng-src="{{iFrameSRC | trustThisUrl}}"></iframe>
+		-->
+		<img ng-cloak bg-image style="max-height:100%;max-width:100%;top:0;left:0;position:absolute;" ng-src="{{iFrameSRC | trustThisUrl}}"></img>
+		<div onClick="window.location.reload();" style="top:0;left:0;position:absolute;height:100%;width:100%;"></div>
+	</div>
 	
-    <img ng-cloak ng-show="loaded" bg-image class="fullBg {{currentAnimation}}" ng-repeat="slide in slides track by slide.id"
+    <img ng-cloak ng-show="loaded" class="fullBg {{currentAnimation}}" ng-repeat="slide in slides track by slide.id"
 		ng-swipe-left="previousSlide"
 		ng-swipe-right="nextSlide"
         ng-hide="!isCurrentSlideIndex($index)"

@@ -13,10 +13,10 @@ cameraName --  the name you want to display for this camera
 
 Optional POST Variables:
 ```
-username	  --  the username for the camera if set (this can be included in the url instead of here)
-password	  --  the password for the camera if set (this can be included in the url instead of here)
-captureCount  --  default 5 --  the number of frames to save when motion is triggered/post is sent to motionCapture.php
-captureDelay  --  default 2 --  the number of seconds between saving frames
+username		--  the username for the camera if set (this can be included in the url instead of here)
+password		--  the password for the camera if set (this can be included in the url instead of here)
+captureCount	--  default 5 --  the number of frames to save when motion is triggered/post is sent to motionCapture.php
+captureDelay	--  default 2 --  the number of seconds between saving frames
 ```
 
 
@@ -41,6 +41,21 @@ To remove events manually from the interface, add ?admin to the url and refresh 
 [webserver]/CameraMotionCapture/?admin
 
 you will now have a toggle 'Delete' button in the upper right corner of the screen.  When toggled 'on', all camera snapshot timestamps and dates will be red.  If you click on any red timestamp or date, it will delete that event or entire day from the webserver.  Remember to turn off 'Delete' when you are done removing the intended events.
+
+
+You can view live streams of cameras by using the following url format if your camera offers a live stream viewable directly in the browser:
+[webserver]/CameraMotionCapture/?live&cameraUrl=[full camera url]
+[webserver]/CameraMotionCapture/?live&cameraUrl=http://192.168.1.10/videostream.cgi
+
+if the camera url need its own parameters, add them after the cameraUrl like this:
+[webserver]/CameraMotionCapture/?live&cameraUrl=[full camera url]&usr=name&pwd=secret
+
+this will format the cameraUrl to include usr and pwd when it opens the stream, like this:
+[full camera url]?usr=name&pwd=secret
+
+you can add as many parameters as your camera needs
+
+
 
 ## Web hosting requirements:
 
