@@ -3,7 +3,7 @@ grab images from IP cameras when motion is triggered
 
 
 To capture images, send a post to:
-[webserver]/CameraMotionCapture/motionCapture.php
+[webserver]/CameraMotionCapture/data/motionCapture.php
 
 Required POST Variables:
 ```
