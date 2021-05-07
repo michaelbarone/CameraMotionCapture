@@ -282,6 +282,7 @@ app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, 
 		if(retries == 0){
 			return false;
 		}
+		$scope.slides = [];
 		$scope.lastInteractionPrevious = $scope.lastInteraction;
 		$scope.lastInteraction = Date.now();
 		$scope.selectedMotionTime = motionTime;
@@ -391,11 +392,12 @@ app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, 
 });
 
 app.factory('QueueService', function($rootScope){
-    var queue = new createjs.LoadQueue(true);
+    var queue = new createjs.LoadQueue(false);
 	queue.setMaxConnections(10);
 	
     function loadManifest(manifest) {
-        queue.loadManifest(manifest);
+        queue.removeAll();
+		queue.loadManifest(manifest);
 
         queue.on('progress', function(event) {
             $rootScope.$broadcast('queueProgress', event);

@@ -1,5 +1,9 @@
 # CameraMotionCapture
-grab images from IP cameras when motion is triggered
+Save images from IP cameras when motion is triggered in a POST
+
+Hubitat drivers found here: https://github.com/michaelbarone/hubitat/tree/master/drivers
+- each camera is a virtual device which can trigger the image capture event
+- creates an iframe to add the CMC web interface to hubitat dashboards
 
 
 To capture images, send a post to:
@@ -31,10 +35,9 @@ By loading the main/root webpage [webserver]/CameraMotionCapture/  it will autom
 
 You can view any full event from the camera (all snapshots for that event) by using the following URL:
 [webserver]/CameraMotionCapture/?cameraName=[cameraName]&event=#
--[cameraName] is the camera name
--event is the event number you want to view.  0 is the current/most recent event, 1 is the previous event, 2 is the event before 1, etc.  if you specify an event number that does not exist you will get a black page with no images.
-
-when you use event=0, the webapp will automatically search for new images every ~1 second and add any found to the current image rotation.  This way, you can load the event=0 page during an event and new snapshots will load automatically even if they are saved after the page loads.
+- [cameraName] is the camera name
+- event is the event number you want to view.  0 is the current/most recent event, 1 is the previous event, 2 is the event before 1, etc.  if you specify an event number that does not exist you will get a black page with no images.
+  - when you use event=0, the webapp will automatically search for new images every ~1 second and add any found to the current image rotation.  This way, you can load the event=0 page during an event and new snapshots will load automatically even if they are saved after the page loads.
 
 
 To remove events manually from the interface, add ?admin to the url and refresh the page:
