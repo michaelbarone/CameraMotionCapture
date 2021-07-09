@@ -29,24 +29,24 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider,$locat
 	
 	/* custom defaults */
 	window.oncontextmenu = function(event) {
-		event.preventDefault();
-		event.stopPropagation();
+		//event.preventDefault();
+		//event.stopPropagation();
 		return false;
 	};
 	window.addEventListener("dragover",function(e){
 		e = e || event;
-		e.preventDefault();
+		//e.preventDefault();
 	},false);
 	window.addEventListener("drop",function(e){
 		e = e || event;
-		e.preventDefault();
+		//e.preventDefault();
 	},false);
 }]);
 //});
 
 
 app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, $http, $q, $filter, $location) {
-    var INTERVAL = 3000;
+    var INTERVAL = 2000;
 	var timeout;
 	var timeoutP;
 	var timeoutN;
@@ -282,7 +282,9 @@ app.controller('MainCtrl', function ($scope, $timeout, $interval, QueueService, 
 		if(retries == 0){
 			return false;
 		}
-		$scope.slides = [];
+		if(retries == -1){
+			$scope.slides = [];
+		}
 		$scope.lastInteractionPrevious = $scope.lastInteraction;
 		$scope.lastInteraction = Date.now();
 		$scope.selectedMotionTime = motionTime;
